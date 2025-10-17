@@ -23,6 +23,10 @@ const csv_writer = createObjectCsvWriter({
       id: "phone",
       title: "PHONE-NUMBER",
     },
+    {
+      id: 'created_at',
+      title:'CREATED_AT'
+    }
   ],
   append: check === true,
 });
@@ -34,9 +38,10 @@ class Person {
     this.phone = phone;
   }
   async saveDetailsToCsv() {
+    const date = new Date().toISOString();
     try {
       await csv_writer.writeRecords([
-        { name: this.name, phone: this.phone, email: this.email },
+        { name: this.name, phone: this.phone, email: this.email,created_at:date },
       ]);
       console.log(`${this.name}'s record have been successfully saved`);
     } catch (err) {
@@ -50,16 +55,19 @@ const questions = [
     name: "name",
     description: colors.cyan("Contact Name"),
     required: true,
+
   },
   {
     name: "phone",
     description: colors.cyan("Contact Number"),
     required: true,
+    pattern: /^\+?[1-9][0-9]{7,14}$/
   },
   {
     name: "email",
     description: colors.cyan("Contact Email"),
     required: true,
+    pattern: /^\S+@\S+\.\S+$/
   },
 ];
 
